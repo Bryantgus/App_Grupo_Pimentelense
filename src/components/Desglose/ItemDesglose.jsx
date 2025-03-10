@@ -1,0 +1,83 @@
+import { useState, useEffect } from "react"
+import ItemInput from "./ItemInput"
+import ItemResult from "./ItemResult"
+import calculateDesglose from "../../utils/calculatorDesglose";
+import { filterValuesInput, changeTypeDesglose } from "../../utils/manageEspecialCases";
+
+export default function ItemDesglose(number) {
+    const [inputNumber, setInputNumber] = useState("")
+    const [measures, setMeasures] = useState({
+        ancho: "",
+        alto: ""
+    });
+
+    const [typeDesglose, setTypeDesglose] = useState({
+        material: "p65",
+        vias: "2v",
+    });
+
+    const [result, setResult] = useState({
+        rc: "",
+        ruleta: "",
+        lateral: "",
+        jamba: "",
+        can: "",
+        cal: ""
+    });
+
+    function updateValues(value, clase) {
+        const whichChange = filterValuesInput(value, clase);
+        if (!whichChange) {return;}
+        if (whichChange.claseKey === "number"){
+            setInputNumber(whichChange.valueKey);
+        } else {
+            setMeasures(prev => ({
+                ...prev,
+                [whichChange.claseKey]: whichChange.valueKey
+            }));
+        }
+    }
+
+    function handlechangeTypeDesglose(e) {
+        const [isMaterial, typeDesglose] = changeTypeDesglose(e);
+        setTypeDesglose(prev => ({
+            ...prev,
+            [isMaterial ? 'material' : 'vias']: typeDesglose
+        }));     
+    }
+
+    useEffect(() => {
+        const { ancho, alto } = measures;
+        if (ancho === "" || alto === "") {return;}
+        try {
+            let desgloseTipo = typeDesglose.material + " " + typeDesglose.vias;
+            let resultsCalculates = calculateDesglose(ancho, alto, desgloseTipo);
+            setResult(resultsCalculates);
+            // desgloseInfo(number, measures, resultsCalculates, typeDesglose);            
+        }
+        catch{return}      
+    },[measures, typeDesglose])
+
+    return (
+        <div className="bg-stone-400 p-2 rounded-[8px] border-stone-600 border-1">
+            <ItemInput label={"N°"} inputValue={inputNumber} number={number} id={"number"} changeInput={updateValues} col={false}/>
+            <div className="flex gap-2">
+                <ItemInput label={"Ancho"} inputValue={measures.ancho} number={number} id={"ancho"} changeInput={updateValues} col={true}/>
+                <ItemInput label={"Alto"} inputValue={measures.alto} number={number} id={"alto"} changeInput={updateValues} col={true}/>
+            </div>
+            <div className="flex flex-col gap-2 mt-2">
+                <ItemResult label={"RC"} value={result.rc}/>
+                <ItemResult label={"Ruleta"} value={result.ruleta}/>
+                <ItemResult label={"Lateral"} value={result.lateral}/>
+                <ItemResult label={"Jamba"} value={result.jamba}/>
+                <ItemResult label={"C.AN"} value={result.can}/>
+                <ItemResult label={"C.AL"} value={result.cal}/>
+            </div>
+
+            <div className="flex gap-2 mt-2">
+                <button onClick={(e) => handlechangeTypeDesglose(e)} className="hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.material}</button>
+                <button onClick={(e) => handlechangeTypeDesglose(e)} className="hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.vias}</button>
+            </div>
+        </div>
+    )
+}
