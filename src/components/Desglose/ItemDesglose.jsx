@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import DataDesglose from "./Desglose"
 import ItemInput from "./ItemInput"
 import ItemResult from "./ItemResult"
 import calculateDesglose from "../../utils/calculatorDesglose";
 import { filterValuesInput, changeTypeDesglose } from "../../utils/manageEspecialCases";
 
 export default function ItemDesglose(number) {
-    const [inputNumber, setInputNumber] = useState("")
+    const [DataDesgloseState, setDataDesgloseState] = useContext(DataDesglose);
+    const [inputNumber, setInputNumber] = useState(number.number)
     const [measures, setMeasures] = useState({
         ancho: "",
         alto: ""
@@ -15,7 +17,7 @@ export default function ItemDesglose(number) {
         material: "p65",
         vias: "2v",
     });
-
+    console.log(number);
     const [result, setResult] = useState({
         rc: "",
         ruleta: "",
@@ -26,14 +28,14 @@ export default function ItemDesglose(number) {
     });
 
     function updateValues(value, clase) {
-        const whichChange = filterValuesInput(value, clase);
-        if (!whichChange) {return;}
-        if (whichChange.claseKey === "number"){
-            setInputNumber(whichChange.valueKey);
+        const {claseKey, valueKey} = filterValuesInput(value, clase);
+        if (claseKey === null) {return;}
+        if (claseKey === "number"){
+            setInputNumber(valueKey);
         } else {
             setMeasures(prev => ({
                 ...prev,
-                [whichChange.claseKey]: whichChange.valueKey
+                [claseKey]: valueKey
             }));
         }
     }
@@ -48,22 +50,24 @@ export default function ItemDesglose(number) {
 
     useEffect(() => {
         const { ancho, alto } = measures;
-        if (ancho === "" || alto === "") {return;}
+        if (ancho === "" || alto === "") { return; }
         try {
             let desgloseTipo = typeDesglose.material + " " + typeDesglose.vias;
             let resultsCalculates = calculateDesglose(ancho, alto, desgloseTipo);
             setResult(resultsCalculates);
-            // desgloseInfo(number, measures, resultsCalculates, typeDesglose);            
+            setDataDesgloseState({ number, measures, resultsCalculates, typeDesglose });
+        } catch (e) {
+            console.error(e); // Es recomendable agregar algún tipo de manejo de errores.
         }
-        catch{return}      
-    },[measures, typeDesglose])
+    }, [measures, typeDesglose, number, setDataDesgloseState]); // Elimina `result` de las dependencias
+    
 
     return (
-        <div className="bg-stone-400 p-2 rounded-[8px] border-stone-600 border-1">
-            <ItemInput label={"N°"} inputValue={inputNumber} number={number} id={"number"} changeInput={updateValues} col={false}/>
+        <div className="bg-stone-400 p-2 rounded-[8px] border-stone-600 border-1 w-[215px]">
+            <ItemInput label={"N°"} inputValue={inputNumber} number={number.number} id={"number"} changeInput={updateValues} col={false}/>
             <div className="flex gap-2">
-                <ItemInput label={"Ancho"} inputValue={measures.ancho} number={number} id={"ancho"} changeInput={updateValues} col={true}/>
-                <ItemInput label={"Alto"} inputValue={measures.alto} number={number} id={"alto"} changeInput={updateValues} col={true}/>
+                <ItemInput label={"Ancho"} inputValue={measures.ancho} number={number.number} id={"ancho"} changeInput={updateValues} col={true}/>
+                <ItemInput label={"Alto"} inputValue={measures.alto} number={number.number} id={"alto"} changeInput={updateValues} col={true}/>
             </div>
             <div className="flex flex-col gap-2 mt-2">
                 <ItemResult label={"RC"} value={result.rc}/>
@@ -75,8 +79,8 @@ export default function ItemDesglose(number) {
             </div>
 
             <div className="flex gap-2 mt-2">
-                <button onClick={(e) => handlechangeTypeDesglose(e)} className="hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.material}</button>
-                <button onClick={(e) => handlechangeTypeDesglose(e)} className="hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.vias}</button>
+                <button onClick={(e) => handlechangeTypeDesglose(e)} className="font-bold hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.material}</button>
+                <button onClick={(e) => handlechangeTypeDesglose(e)} className="font-bold hover:bg-gray-400 flex justify-center items-center w-23 rounded-[7px] border-1 border-[black] bg-stone-400">{typeDesglose.vias}</button>
             </div>
         </div>
     )
