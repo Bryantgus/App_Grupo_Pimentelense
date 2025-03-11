@@ -1,31 +1,71 @@
-import { useState } from "react";
-import ItemDesglose from "./ItemDesglose"
+import { useEffect, useState, useRef } from "react";
+import { ItemDesglose } from "./ItemDesglose"
 import Header from "./Header";
-import { DataDesglose } from "./DataDesgloseContext"
+import { DataDesgloseContext } from "../Hooks/DataDesgloseContext"
+import { calculateBarra } from "../../utils/calculatorDesglose";
+import SideBarBarra from "./SideBarBarra";
+
+
     
 export default function Desglose() {
+    const isFirstRender = useRef(true);
+    const [animation, setAnimation] = useState(false);
+    const [renderAnimatioItem, setRenderAnimationItem] = useState(false);
+    const [dataBarra, setDataBarra] = useState({});
     const [DataDesgloseState, setDataDesgloseState] = useState({});
-    const [cantidadDesglose, setCantidadDesglose] = useState(1);
+    const [cantidadDesglose, setCantidadDesglose] = useState(2);
     const DesgloseArray = Array.from({ length: cantidadDesglose }, (_, index) => (index + 1).toString());
-    
+
     function handleCantidad(cantidad) {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         const toNumber = Number(cantidad);
-        setCantidadDesglose(toNumber)
+        if (!isNaN(toNumber)) {
+            setCantidadDesglose(toNumber);
+        }
+    }    
+
+    function handleAnimation() {
+        if (!renderAnimatioItem) {
+            setAnimation(false);
+            setRenderAnimationItem(true);
+        } else {
+            setAnimation(true);
+            setTimeout(() => {
+                setRenderAnimationItem(false);
+            },[1000])
+        }
     }
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const barraInfo = calculateBarra(DataDesgloseState);
+        setDataBarra(barraInfo);        
+    }, [DataDesgloseState]);
+
+    
+
     return (
         <div className="flex flex-col">
-            <Header handleCantidad={handleCantidad}/>
+            <Header changeCantidad={handleCantidad} cantidad={cantidadDesglose}  handleAnimation={handleAnimation}/>
 
-            <DataDesglose.Provider value={{DataDesgloseState, setDataDesgloseState}}>
-                <div className="grid grid-cols-4 ml-15">
-                    {DesgloseArray.map((item, index) => (
-                        <ItemDesglose 
-                            key={index}
-                            number={item}/>                     
+            <DataDesgloseContext.Provider value={{ DataDesgloseState, setDataDesgloseState }}>
+                <div className="grid grid-cols-4 ml-15 gap-y-[20px]">
+                    {DesgloseArray.map((item) => (
+                        <ItemDesglose
+                            key={item}
+                            number={item}
+                        />
                     ))}
                 </div>
-            </DataDesglose.Provider>
-                
+            </DataDesgloseContext.Provider>
+            {renderAnimatioItem && <SideBarBarra isExiting={animation} barraInfo={dataBarra}/>}
         </div>
-    )
+    );
 }

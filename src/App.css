@@ -1,0 +1,47 @@
+.square {
+    width: 300px;
+    height: auto;
+    position: fixed;
+    top: 12%;
+    right: -500px;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    border-radius: 15px;
+    border: 0.1px solid gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 15px;
+    padding-right: 20px;
+    gap: 10px;
+    padding-bottom: 20px;
+  }
+   
+ /* Animaciones para entrar y salir */
+  @keyframes slideIn {
+    from {
+      right: -400px; /* Fuera del viewport */
+    }
+    to {
+      right: 10px; /* Dentro del viewport */
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      right: 10px; /* Dentro del viewport */
+    }
+    to {
+      right: -400px; /* Fuera del viewport */
+    }
+  }
+  
+  /* Aplica la animación de entrada */
+  .in {
+    animation-name: slideIn;
+  }
+  
+  /* Aplica la animación de salida */
+  .exiting {
+    animation-name: slideOut;
+  }

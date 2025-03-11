@@ -6,6 +6,8 @@ import Desglose from "./components/Desglose/Desglose";
 import Cotizacion from "./components/Cotizacion/Cotizacion";
 
 export default function App() {
+  console.log("render App");
+  
   return (
     <Router>
       <div className="flex w-full">

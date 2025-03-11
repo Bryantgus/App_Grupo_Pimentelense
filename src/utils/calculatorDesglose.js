@@ -113,3 +113,26 @@ export default function calculateDesglose(ancho, alto, tipo) {
     }
     return result
 }
+
+export function calculateBarra(data) {
+    let totals = {};
+
+    Object.values(data).forEach(({ resultsCalculates }) => {
+        for (let key in resultsCalculates) {
+            let decimalValue = toDecimal(resultsCalculates[key]);
+            totals[key] = (totals[key] || 0) + decimalValue;
+        }
+    });
+
+    const barra = {
+        riel: (totals.rc / 252).toFixed(3),
+        cabezal: (totals.rc / 252).toFixed(3),
+        ruleta: ((totals.ruleta * 4) / 252).toFixed(3),
+        lateral: ((totals.lateral * 2) / 252).toFixed(3),
+        jamba: ((totals.jamba * 2) / 252).toFixed(3),
+        enganche: ((totals.jamba * 2) / 252).toFixed(3)
+    }
+
+    return {totals, barra};
+}
+

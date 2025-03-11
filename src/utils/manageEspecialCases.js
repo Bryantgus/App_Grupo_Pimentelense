@@ -1,18 +1,21 @@
 //This function allows to enter just numbers spaces and the simbol /
 export function filterValuesInput(value, clase) {
     const widthHeightPattern = /^[0-9\s/]+$/;
-        if (clase === "number"){
-            return {claseKey: clase,
-                    valueKey: value
-            };
-        } else if ((clase === "ancho" || clase === "alto") && (value === "" || widthHeightPattern.test(value))) {
-            return {claseKey: clase,
-                    valueKey: value
-            };
-        }
-    return null;
 
+    // Caso número: devolver directamente
+    if (clase === "number") {
+        return { claseKey: clase, valueKey: value };
+    }
+
+    // Caso ancho o alto: si está vacío o si el valor coincide con el patrón
+    else if ((clase === "ancho" || clase === "alto") && (value === "" || widthHeightPattern.test(value))) {
+        return { claseKey: clase, valueKey: value };
+    }
+
+    // Si no se cumple ninguna de las condiciones, devolver null o un objeto predeterminado
+    return { claseKey: null, valueKey: null }; // Devolver valores claros en caso de error
 }
+
 
 /*This function manage the change of type of Desgloses in the app */
 export function changeTypeDesglose(e) {
