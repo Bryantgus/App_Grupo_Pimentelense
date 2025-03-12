@@ -1,5 +1,5 @@
 export default function Header({ cantidad, changeCantidad, handleAnimation }) {
-
+    console.log
     function handleCantidad(e) {
         const number = Number(e.target.value);
         if (number < 100) {
