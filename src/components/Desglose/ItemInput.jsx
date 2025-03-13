@@ -1,5 +1,7 @@
-
-export default function ItemInput({ label, inputValue, number, id, changeInput, col, type }) {
+import React from "react"
+const ItemInput = React.memo(({ label, inputValue, number, id, changeInput, col, type }) => {
+    console.log("render Input");
+    
     return (
         <div className={`${col && "flex-col"} flex gap-2`} >
                 <label htmlFor={`${id}${number}`} className="font-bold flex justify-center items-center w-23 h-7 rounded-[7px] border-1 border-[black] bg-gray-300 mt-2">{label}</label>
@@ -12,4 +14,6 @@ export default function ItemInput({ label, inputValue, number, id, changeInput, 
                 />
         </div>
     )
-}
+})
+
+export default ItemInput;

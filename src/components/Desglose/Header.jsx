@@ -21,10 +21,10 @@ export default function Header({ cantidad, changeCantidad, handleAnimation }) {
                     <label htmlFor="cantidad" className="inline text-center">Cantidad Desgloses</label>
                     <input
                         id="cantidad"
-                        type="number" // Cambié esto a tipo "number" para que solo se ingresen números
+                        type="number" 
                         className="bg-white text-center w-[80px] mb-1 rounded-[10px]"
                         value={cantidad}
-                        onChange={(e) => handleCantidad(e)} // Maneja el cambio en el input directamente aquí
+                        onChange={(e) => handleCantidad(e)}
                         autoComplete="off"
                     />
                 </div>

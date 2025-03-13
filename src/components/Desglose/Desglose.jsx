@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { ItemDesglose } from "./ItemDesglose"
+import ItemDesglose from "./ItemDesglose"
 import Header from "./Header";
-import { DataDesgloseContext } from "../Hooks/DataDesgloseContext"
+import { DataDesgloseContext } from "../../Hooks/DataDesgloseContext"
 import { calculateBarra } from "../../utils/calculatorDesglose";
 import SideBarBarra from "./SideBarBarra";
 
@@ -13,18 +13,15 @@ export default function Desglose() {
     const [renderAnimatioItem, setRenderAnimationItem] = useState(false);
     const [dataBarra, setDataBarra] = useState({});
     const [DataDesgloseState, setDataDesgloseState] = useState({});
-    const [cantidadDesglose, setCantidadDesglose] = useState(2);
+    const [cantidadDesglose, setCantidadDesglose] = useState(1);
     const DesgloseArray = Array.from({ length: cantidadDesglose }, (_, index) => (index + 1).toString());
 
     function handleCantidad(cantidad) {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
+        if (isFirstRender.current) { isFirstRender.current = false; return; }
+
         const toNumber = Number(cantidad);
-        if (!isNaN(toNumber)) {
-            setCantidadDesglose(toNumber);
-        }
+
+        if (!isNaN(toNumber)) {setCantidadDesglose(toNumber);}
     }    
 
     function handleAnimation() {
@@ -53,10 +50,11 @@ export default function Desglose() {
 
     return (
         <div className="flex flex-col">
+
             <Header changeCantidad={handleCantidad} cantidad={cantidadDesglose}  handleAnimation={handleAnimation}/>
 
             <DataDesgloseContext.Provider value={{ DataDesgloseState, setDataDesgloseState }}>
-                <div className="grid grid-cols-4 ml-15 gap-y-[20px]">
+                <div className="grid grid-cols-4 ml-15 justfify-center gap-y-[20px]">
                     {DesgloseArray.map((item) => (
                         <ItemDesglose
                             key={item}
