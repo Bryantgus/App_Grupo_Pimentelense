@@ -23,7 +23,8 @@ export function changeTypeDesglose(e) {
         // Mapeo de cambios
         const typeDesglose = {
             "p65": "trad.",
-            "trad.": "p65",
+            "trad.": "p92",
+            "p92": "p65",
             "2v": "3v",
             "3v": "2v"
         };

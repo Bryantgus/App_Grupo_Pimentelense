@@ -8,14 +8,13 @@ import { DataDesgloseContext } from "../../Hooks/DataDesgloseContext";
 import useDebounce from "../../Hooks/useDeounce";
 
 const ItemDesglose = React.memo(({ number }) => {  
-    console.log("Render ItemDesglose");
     
     const { DataDesgloseState, setDataDesgloseState } = useContext(DataDesgloseContext);
     const [inputNumber, setInputNumber] = useState(number);
     const [measures, setMeasures] = useState({ ancho: "", alto: "" });
     const debouncedMeasures = useDebounce(measures, 500);
 
-    const [typeDesglose, setTypeDesglose] = useState({ material: "p65", vias: "2v" });
+    const [typeDesglose, setTypeDesglose] = useState({ material: "p92", vias: "2v" });
 
     const [result, setResult] = useState({ rc: "", ruleta: "", lateral: "", jamba: "", can: "", cal: "" });
 

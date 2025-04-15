@@ -80,6 +80,14 @@ function tipoDesglose(tipo) {
             can = [6, 3];
             cal = 4;  
         break;
+        case "p92 2v": 
+            rc = 1.75;
+            lateral = 0.125;
+            ruleta = [1, 2];
+            jamba = 2.5;
+            can = [6, 3];
+            cal = 4;  
+        break;
     }
 
     return {rc, lateral, ruleta, jamba, can, cal}
